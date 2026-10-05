@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b14"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Encontrar o Erro"><title>MISSÃO: ENCONTRAR O ERRO</title>
+<style>
+:root{--bg:#070b14;--pn:#0f1626;--ln:#1e2a44;--tx:#e6ecff;--mu:#8fa0c4;--cy:#22d3ee;--rd:#ff4d6d;--gn:#34d399;--yl:#fbbf24;--bl:#60a5fa;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:clamp(15px,1vw + 11px,19px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:1rem/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;overflow-x:hidden;background-image:linear-gradient(var(--ln) 1px,transparent 1px),linear-gradient(90deg,var(--ln) 1px,transparent 1px);background-size:44px 44px;background-attachment:fixed}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 50% 0,#22d3ee22,transparent 60%),linear-gradient(#070b14cc,#070b14f2);pointer-events:none}
+#hud,#app{position:relative;width:100%;max-width:46rem;margin:0 auto;padding:.75rem max(14px,env(safe-area-inset-left)) .75rem max(14px,env(safe-area-inset-right))}
+#app{flex:1;display:flex;flex-direction:column;justify-content:center;text-align:center}
+#app>*{width:100%}
+.log,.why,th:first-child,td:first-child{text-align:left}
+.bar{text-align:left}
+.opt{text-align:center;min-height:3rem}
+.btn{min-height:3rem}
+@media(min-width:900px){#hud,#app{max-width:52rem}}
+@media(max-width:380px){table{font-size:.8rem}td{padding:10px 2px}td:first-child{padding-left:6px}th{font-size:.65rem}.card{padding:12px}.bar span:first-child{width:40%}}
+@media(max-height:520px) and (orientation:landscape){#app{justify-content:flex-start}.hero{padding:8px 0}}
+#hud{display:none;padding-bottom:0}
+.hb{display:flex;justify-content:space-between;align-items:center;font-weight:700;gap:8px}
+.sc{color:var(--cy);font-size:1.25rem;text-shadow:0 0 12px #22d3ee88}
+.pb{height:6px;background:var(--ln);border-radius:9px;margin-top:8px;overflow:hidden}
+.pb i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--gn));transition:width .6s}
+.mu{color:var(--mu)}.sm{font-size:.85rem}
+.card{background:linear-gradient(160deg,#131d33,var(--pn));border:1px solid var(--ln);border-radius:16px;padding:16px;margin:12px 0;animation:in .5s both;box-shadow:0 0 24px #22d3ee0d}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+h1{font-size:clamp(2rem,9vw,3.6rem);line-height:1.05;margin:.2em 0;letter-spacing:1px;text-shadow:0 0 24px #22d3ee99}
+h1 b{color:var(--rd);text-shadow:0 0 24px #ff4d6d99}
+h2{margin:.2em 0;font-size:1.3rem}
+.tag{display:inline-block;font-size:.72rem;letter-spacing:2px;color:var(--cy);border:1px solid var(--cy);padding:2px 8px;border-radius:99px}
+.btn,.opt{font:inherit;font-weight:700;color:#04121a;background:linear-gradient(90deg,var(--cy),var(--gn));border:0;border-radius:12px;padding:14px 20px;cursor:pointer;transition:.2s;box-shadow:0 0 18px #22d3ee55}
+.btn:hover,.opt:hover{transform:translateY(-2px) scale(1.02)}.btn:active,.opt:active{transform:scale(.97)}
+.big{width:100%;font-size:1.1rem;margin-top:14px}
+.opt{display:block;width:100%;margin:8px 0;background:var(--pn);color:var(--tx);border:1px solid var(--ln);box-shadow:none;text-align:left}
+.opt.ok{background:#064e3b;border-color:var(--gn);animation:glow 1s}.opt.no{background:#4c0519;border-color:var(--rd);animation:shake .4s}
+.opt.sel{border-color:var(--cy);background:#0b3a48}
+@keyframes glow{50%{box-shadow:0 0 30px var(--gn)}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.hero{text-align:center;padding:26px 0 8px}
+.ico{font-size:2rem;display:inline-block;margin:6px;animation:fl 3s ease-in-out infinite}
+.ico:nth-child(2n){animation-delay:.8s}.ico:nth-child(3n){animation-delay:1.5s}
+@keyframes fl{50%{transform:translateY(-9px)}}
+.scan{height:2px;background:linear-gradient(90deg,transparent,var(--cy),transparent);margin:14px 0;animation:sc 2.4s linear infinite}
+@keyframes sc{from{opacity:.2}50%{opacity:1}to{opacity:.2}}
+.log{font-family:ui-monospace,Menlo,monospace;font-size:.88rem;padding:7px 10px;border-left:3px solid var(--yl);background:#ffffff08;margin:6px 0;border-radius:0 8px 8px 0}
+.ev{font-size:1.15rem;font-weight:700;border-color:var(--rd);text-shadow:0 0 10px #ff4d6d55}
+table{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:.9rem}
+th{color:var(--mu);font-weight:600;font-size:.75rem;text-align:center}
+td{background:var(--pn);border:1px solid var(--ln);padding:12px 4px;text-align:center}
+td:first-child{padding-left:10px;border-radius:10px 0 0 10px}td:last-child{border-radius:0 10px 10px 0;font-weight:700;color:var(--cy)}
+tr.row{cursor:pointer}tr.row:hover td{background:#16233d;border-color:var(--cy)}
+td.pop{animation:pop .6s;color:var(--gn);font-weight:700}
+@keyframes pop{30%{transform:scale(1.5);background:#064e3b}}
+.fb{min-height:24px;font-weight:600}.fb.g{color:var(--gn)}.fb.r{color:var(--rd)}
+.fb .btn{margin-top:8px;padding:8px 16px}
+.bar{display:flex;align-items:center;gap:8px;margin:10px 0;font-size:.92rem}
+.bar span:first-child{width:46%}.bar div{flex:1;background:var(--ln);border-radius:8px;height:22px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;transition:width 1.2s;border-radius:8px}
+.big2{font-size:2.6rem;font-weight:800;color:var(--cy);text-shadow:0 0 20px #22d3ee}
+.alert{border-color:var(--rd);text-align:center;animation:in .5s both,pulse 1.6s infinite}
+@keyframes pulse{50%{box-shadow:0 0 30px #ff4d6d66}}
+.why{margin-top:10px;padding:10px;border-radius:10px;background:#ffffff0d;font-size:.92rem}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:center}
+.stats div{background:var(--pn);border:1px solid var(--ln);border-radius:12px;padding:10px}
+.stats b{display:block;font-size:1.5rem;color:var(--cy)}
+</style></head><body>
+<div id="hud"><div class="hb"><span id="ph" class="tag"></span><span class="sc" id="sc">0</span><button id="sn" onclick="snd=!snd;this.textContent=snd?'🔊':'🔇'" style="background:none;border:0;font-size:1.3rem;color:#fff;cursor:pointer">🔊</button></div><div class="pb"><i id="pg"></i></div></div>
+<div id="app"></div>
+<script>
+const app=document.getElementById('app');let snd=true,AC,S;
+const PN=['Manhã','Tarde'],per=t=>+t.slice(0,2)<12?0:1;
+const sh=a=>[...a].sort(()=>Math.random()-.5);
+function mix(E,top){for(let n=0;n<200;n++){const q=sh(E.map(e=>[e[1],e[2]])),r=E.map((e,i)=>[e[0],q[i][0],q[i][1]]);if(top<0)return r;const c=[0,0];r.forEach(e=>{if(e[2]==top)c[per(e[0])]++});if(c[0]!=c[1])return r}return E}
+const PA=[['Peça chegou com a lateral afundada','Topo da peça com dente após queda','Chapa dobrada na quina','Peça deformada pelo empilhamento','Canto da peça achatado pela prensa','Peça com curvatura após impacto'],['Caixa amassada, produto dentro intacto','Saco plástico com furo, peça intacta','Lacre rompido na embalagem','Caixa rasgada, produto à mostra','Fita de fechamento descolada','Papelão molhado na caixa externa'],['Caixa intacta, mas o rótulo traz o lote de outro produto','Etiqueta com data de validade trocada','Código de barras de outro item','Preço impresso errado','Etiqueta colada no produto errado','Rótulo com modelo diferente do pedido'],['Marca de atrito longa na pintura, sem deformação','Arranhão fino na tampa','Risco profundo perto da logomarca','Fricção deixou marcas no acabamento','Superfície com arranhões de contato','Risco superficial na lateral']];
+const PB=[['Aluno entrou 10 minutos após o sinal','Aluno atrasado após o almoço','Aluno entrou com a aula já iniciada','Aluno chegou depois do intervalo','Aluno chegou com a chamada já encerrada'],['Dois alunos conversando durante a explicação','Grupo cochichando no fundo da sala','Turma toda falando ao mesmo tempo','Conversa entre colegas durante a chamada','Alunos rindo e conversando na leitura','Discussão paralela sobre o jogo de ontem'],['Caderno esquecido em casa','Livro didático esquecido','Aluno sem lápis para a atividade','Tarefa de casa não trazida','Estojo esquecido em casa'],['Celular tocando no meio da aula','Vídeo no celular durante a atividade','Mensagem no celular sob a carteira','Fone de ouvido em uso na atividade','Jogo no celular durante a explicação']];
+function gen(P,tp){for(let n=0;n<800;n++){const top=Math.floor(Math.random()*4),o=[0,1,2,3].filter(k=>k!=top),cnt=[];cnt[top]=4;sh(sh([[2,2,2],[3,2,1]])[0]).forEach((v,i)=>cnt[o[i]]=v);
+let tm=[];for(let i=0;i<10;i++)tm.push(420+Math.floor(Math.random()*600));tm.sort((a,b)=>a-b);if(tm.some((v,i)=>i&&v-tm[i-1]<20))continue;
+const L=sh(P.flatMap((p,k)=>sh(p).slice(0,cnt[k]).map(x=>[x,k]))),r=tm.map((v,i)=>[String(v/60|0).padStart(2,'0')+':'+String(v%60).padStart(2,'0'),L[i][0],L[i][1]]);
+if(tp){const c=[0,0];r.forEach(e=>{if(e[2]==top)c[per(e[0])]++});if(c[0]==c[1])continue}else{if(r.filter(e=>per(e[0])==0).length==5)continue}return r}}
+function sfx(k){if(!snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const seq={ok:[[660,.08],[880,.12]],no:[[200,.2],[150,.25]],go:[[440,.08],[660,.08],[990,.18]],win:[[520,.1],[660,.1],[780,.1],[1040,.3]]}[k];let t=AC.currentTime;seq.forEach(([f,d])=>{const o=AC.createOscillator(),g=AC.createGain();o.type=k=='no'?'sawtooth':'sine';o.frequency.value=f;g.gain.setValueAtTime(.06,t);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(AC.destination);o.start(t);o.stop(t+d);t+=d})}catch(e){}}
+function pts(n,ok){S.score+=n;if(ok===true){S.ok++;S.tot++}else if(ok===false)S.tot++;document.getElementById('sc').textContent=S.score.toLocaleString('pt-BR')+' pts'}
+function hud(n,t){document.getElementById('hud').style.display='block';document.getElementById('ph').textContent='FASE '+n+' · '+t;document.getElementById('pg').style.width=(n-1)*20+'%';document.getElementById('sc').textContent=S.score.toLocaleString('pt-BR')+' pts'}
+const CA=[{n:'Produto amassado',i:'🟥',c:'#ff4d6d',r:'deformação por impacto ou pressão (afundado, dobrado, com dente)'},{n:'Embalagem danificada',i:'🟨',c:'#fbbf24',r:'defeito na caixa, saco ou lacre, e não no produto em si'},{n:'Etiqueta incorreta',i:'🟦',c:'#60a5fa',r:'informação impressa errada, trocada ou de outro item'},{n:'Produto riscado',i:'🟩',c:'#34d399',r:'marca superficial de atrito, sem deformar a peça'}];
+const EA=[['08:32','Peça chegou com a lateral afundada',0],['09:40','Caixa intacta, mas o rótulo traz o lote de outro produto',2],['10:15','Marca de atrito longa na pintura, sem deformação',3],['11:20','Saco plástico com furo, peça intacta',1],['13:10','Topo da peça com dente após queda',0],['13:55','Etiqueta com data de validade trocada',2],['14:40','Caixa amassada, produto dentro intacto',1],['15:20','Chapa dobrada na quina',0],['16:05','Arranhão fino na tampa',3],['16:40','Peça deformada pelo empilhamento',0]];
+const CB=[{n:'Aluno atrasado',i:'🟥',c:'#ff4d6d',r:'chegada depois do horário de início da aula'},{n:'Conversa paralela',i:'🟨',c:'#fbbf24',r:'falas entre colegas que atrapalham a explicação'},{n:'Material esquecido',i:'🟦',c:'#60a5fa',r:'aluno sem caderno, livro, lápis ou tarefa'},{n:'Celular em uso',i:'🟩',c:'#34d399',r:'aparelho usado durante a atividade'}];
+const EB=[['07:50','Aluno entrou 10 minutos após o sinal',0],['08:30','Dois alunos conversando durante a explicação',1],['09:20','Caderno esquecido em casa',2],['10:40','Celular tocando no meio da aula',3],['13:15','Grupo cochichando no fundo da sala',1],['13:50','Aluno atrasado após o almoço',0],['14:30','Vídeo no celular durante a atividade',3],['15:10','Turma toda falando ao mesmo tempo',1],['15:50','Livro didático esquecido',2],['16:30','Conversa entre colegas durante a chamada',1]];
+
+function intro(){S={score:0,ok:0,tot:0};document.getElementById('hud').style.display='none';
+app.innerHTML=`<div class="hero"><div><span class="ico">🔍</span><span class="ico">📁</span><span class="ico">📊</span><span class="ico">🚨</span><span class="ico">📋</span></div><span class="tag">CENTRAL DE INVESTIGAÇÃO DA QUALIDADE</span><h1>MISSÃO:<br><b>ENCONTRAR O ERRO</b></h1><div class="scan"></div><p class="mu">Os problemas estão acontecendo. Os dados vão revelar a verdade.</p></div>
+
+<button class="btn big" onclick="sfx('go');p1()">▶ INICIAR INVESTIGAÇÃO</button>`}
+
+function p1(){hud(1,'COMO JOGAR');const logs=['08:32 — “Peça chegou toda amassada na esteira.”','09:10 — “Caixa rasgada, produto ficou exposto.”','09:45 — “Rótulo com código de outro item.”','10:20 — “Arranhão comprido na tampa.”','10:40 — “Operador chegou atrasado por causa do ônibus.”','11:00 — “Café acabou na copa.”'];
+const ch=sh(['Produto amassado','Embalagem danificada','Etiqueta incorreta','Produto riscado','Atraso de funcionário','Falta de café']),good=CA.map(c=>c.n),sel=new Set();
+app.innerHTML=`<div class="card"><h2>🎮 Como funciona</h2><p>Você é um <b>inspetor de qualidade</b>. A fábrica tem falhas, mas ninguém sabe qual acontece mais. Use a <b>Folha de Verificação</b> para descobrir: observar → registrar → organizar → analisar.</p><div class="log">1️⃣ Defina o que será registrado</div><div class="log">2️⃣ Ocorrências chegam uma a uma: toque na linha certa da folha</div><div class="log">3️⃣ Veja os dados em gráfico e escolha o que investigar primeiro</div><div class="log">4️⃣ Interprete a ficha do suspeito: frequência, % e período</div><div class="log">5️⃣ Desafio final com um caso novo</div><p class="sm mu" style="margin-bottom:0">✅ Registro +100 · ⚡ Rapidez +25 · 🧠 Análise +200 · 🏁 Desafio +500 · ❌ Erro −50</p></div>
+<button class="btn big" onclick="sfx('go');p2()">Receber a Folha de Verificação →</button>`}
+
+function play(cfg,done){let i=0,lock=false,t0,m=cfg.cats.map(()=>[0,0]);
+app.innerHTML=`<div class="card"><h2>${cfg.title}</h2><p class="mu sm">${cfg.intro}</p></div><div class="card ev" id="ev"></div><div id="fb" class="fb"></div>
+<table><tr><th style="text-align:left">Problema</th><th>Manhã<br>7h–12h</th><th>Tarde<br>12h–17h</th><th>Total</th></tr>${sh(cfg.cats.map((c,k)=>k)).map(k=>{const c=cfg.cats[k];return `<tr class="row" onclick="pk(${k})"><td>${c.i} ${c.n}</td>${[0,1].map(p=>`<td id="c${k}${p}">·</td>`).join('')}<td id="t${k}">0</td></tr>`}).join('')}</table><div class="mu sm" id="pr"></div>`;
+const $=id=>document.getElementById(id);
+function show(){const e=cfg.ev[i];$('ev').innerHTML=`🚨 ${e[0]} — ${e[1]}`;$('ev').style.animation='none';void $('ev').offsetWidth;$('ev').style.animation='in .4s both';$('pr').textContent=`Ocorrência ${i+1} de ${cfg.ev.length} · toque na linha do problema correspondente`;t0=Date.now();lock=false;$('fb').innerHTML=''}
+function commit(){const e=cfg.ev[i],k=e[2],p=per(e[0]);m[k][p]++;const c=$('c'+k+p);c.textContent=m[k][p];c.classList.remove('pop');void c.offsetWidth;c.classList.add('pop');$('t'+k).textContent=m[k].reduce((a,b)=>a+b)}
+function nx(){i++;if(i>=cfg.ev.length){setTimeout(()=>done(m),500)}else show()}
+window.pk=k=>{if(lock)return;lock=true;const e=cfg.ev[i],f=$('fb');
+if(k==e[2]){const b=Date.now()-t0<5000?25:0;pts(100+b,true);sfx('ok');f.className='fb g';f.textContent='✓ Registro realizado +'+(100+b)+(b?' (bônus rapidez)':'');commit();setTimeout(nx,850)}
+else{pts(-50,false);sfx('no');f.className='fb r';f.innerHTML=`⚠ Registro incorreto −50<br><span style="font-weight:400">Aqui é <b>${cfg.cats[e[2]].n}</b>: ${cfg.cats[e[2]].r}. Você marcou “${cfg.cats[k].n}”: ${cfg.cats[k].r}.</span><br><button class="btn" onclick="cn()">Entendi, registrar</button>`}};
+window.cn=()=>{commit();nx()};show()}
+
+function p2(){hud(2,'FOLHA DE VERIFICAÇÃO');play({title:'📋 Sua Folha de Verificação',intro:'Expediente das 7h às 17h. As ocorrências chegam uma a uma. Cada toque registra +1 na linha certa, no período do horário.',cats:CA,ev:gen(PA,1)},m=>{window.M2=m;p3()})}
+
+const sums=m=>m.map(r=>r.reduce((a,b)=>a+b));
+function quiz(qs,done,after){let i=0;const show=()=>{const q=qs[i];app.innerHTML=(q.pre||'')+`<div class="card"><span class="tag">PERGUNTA ${i+1}/${qs.length}</span><h2 style="margin-top:10px">${q.q}</h2>${sh(q.o).map(o=>`<button class="opt" onclick="an(this,'${o}')">${o}</button>`).join('')}<div id="wy"></div></div>`;
+window.an=(b,o)=>{document.querySelectorAll('.opt').forEach(x=>x.disabled=true);const ok=o==q.a;b.classList.add(ok?'ok':'no');if(ok){pts(200,true);sfx('ok')}else{pts(0,false);sfx('no');document.querySelectorAll('.opt').forEach(x=>{if(x.textContent==q.a)x.classList.add('ok')})}
+document.getElementById('wy').innerHTML=`<div class="why">${ok?'✓ Análise correta! +200<br>':'⚠ Resposta certa: <b>'+q.a+'</b><br>'}${q.w}</div><button class="btn big" onclick="nq()">Continuar →</button>`};
+window.nq=()=>{i++;i<qs.length?show():done()}};show()}
+
+function bars(cats,tot,max){return cats.map((c,k)=>`<div class="bar"><span>${c.i} ${c.n} — <b>${tot[k]}</b></span><div><i data-w="${tot[k]/max*100}" style="background:${c.c}"></i></div></div>`).join('')}
+function grow(){setTimeout(()=>document.querySelectorAll('.bar i').forEach(e=>e.style.width=e.dataset.w+'%'),80)}
+
+function p3(){hud(3,'INVESTIGAÇÃO');const t=sums(M2),mx=Math.max(...t),top=t.indexOf(mx);
+quiz([{pre:`<div class="card"><h2>🧩 Dados organizados</h2><p class="mu sm">A folha transformou registros soltos em números. Total: ${t.reduce((a,b)=>a+b)} ocorrências.</p><b>PROBLEMAS ENCONTRADOS</b>${bars(CA,t,mx)}</div>`,q:'Qual problema merece ser investigado primeiro?',o:CA.map(c=>c.n),a:CA[top].n,w:`${CA[top].n} tem a maior frequência (${mx}). Investigar o que mais se repete gera o maior ganho.`}],()=>{sfx('win');p4(t,top)});grow()}
+
+function p4(t,top){hud(4,'O SUSPEITO');const tot=t.reduce((a,b)=>a+b),pc=Math.round(t[top]/tot*100),pp=M2[top],mp=pp.indexOf(Math.max(...pp));
+const pre=`<div class="card alert"><span class="tag" style="color:var(--rd);border-color:var(--rd)">🚨 SUSPEITO IDENTIFICADO</span><h1 style="font-size:2rem">${CA[top].n.toUpperCase()}</h1><div class="big2">${t[top]}</div><div class="mu">ocorrências registradas</div></div><div class="card"><div class="stats"><div><b>${t[top]}/${tot}</b>frequência</div><div><b>${pc}%</b>do total</div></div><p class="sm mu">Ocorrências por período:</p>${PN.map((n,p)=>`<div class="bar"><span>${n}</span><div><i data-w="${pp[p]/Math.max(...pp)*100}" style="background:var(--rd)"></i></div><b>${pp[p]}</b></div>`).join('')}</div>`;
+const offs=[-13,12,-25,25],ops=[pc,...offs.map(o=>Math.max(3,pc+o))].filter((v,i,a)=>a.indexOf(v)==i).slice(0,4).map(v=>v+'%');
+quiz([{pre,q:'Em qual período o suspeito mais apareceu?',o:PN,a:PN[mp],w:`Na folha, a coluna ${PN[mp]} tem ${pp[mp]} registros: o maior valor. Isso mostra <b>quando</b> investigar.`},{pre,q:`Qual o percentual aproximado do suspeito no total?`,o:ops,a:pc+'%',w:`${t[top]} ÷ ${tot} = ${pc}%. O percentual mostra o peso do problema no conjunto.`}],p5,0);grow()}
+
+function p5(){hud(5,'DESAFIO FINAL');play({title:'🧠 Novo caso: a sala de aula',intro:'Dia letivo das 7h às 17h. Situações do dia a dia da sala de aula, categorias novas. Complete a folha para depois analisar.',cats:CB,ev:gen(PB,0)},m=>{const t=sums(m),tot=t.reduce((a,b)=>a+b),mx=Math.max(...t),top=t.indexOf(mx),pp=[0,1].map(p=>m.reduce((a,r)=>a+r[p],0)),mp=pp.indexOf(Math.max(...pp));
+const pre=`<div class="card"><b>FOLHA CONCLUÍDA</b>${bars(CB,t,mx)}<p class="sm mu">Manhã ${pp[0]} · Tarde ${pp[1]}</p></div>`;
+quiz([{pre,q:'1. Qual problema ocorreu mais vezes?',o:CB.map(c=>c.n),a:CB[top].n,w:`${CB[top].n} soma ${mx}, a maior linha da coluna Total.`},{pre,q:'2. Qual período apresentou mais ocorrências?',o:PN,a:PN[mp],w:`Somando as linhas, ${PN[mp]} teve ${pp[mp]}, contra ${pp.filter((_,p)=>p!=mp).join(' e ')}.`},{pre,q:'3. Qual problema passa de 1/3 das ocorrências e deve ser investigado primeiro?',o:CB.map(c=>c.n),a:CB[top].n,w:`${mx} de ${tot} é ${Math.round(mx/tot*100)}%, mais de um terço. Prioridade clara.`},{pre,q:'4. Quantas ocorrências foram registradas no total?',o:[tot-4,tot-2,tot,tot+4].map(String),a:String(tot),w:`Soma das linhas: ${t.join(' + ')} = ${tot}.`}],()=>{pts(500);end()})})}
+
+function end(){sfx('win');const ac=S.tot?Math.round(S.ok/S.tot*100):0,r=ac>=90?['🥇','Mestre da Qualidade']:ac>=70?['🥈','Investigador de Qualidade']:['🥉','Aprendiz'];
+document.getElementById('pg').style.width='100%';
+app.innerHTML=`<div class="hero"><div class="ico" style="font-size:4rem">🏆</div><span class="tag">CASO #047 ENCERRADO</span><h1>INVESTIGAÇÃO<br>CONCLUÍDA</h1></div><div class="card"><div class="stats"><div><b id="fs">0</b>pontuação</div><div><b>${ac}%</b>precisão</div></div><h2 style="text-align:center;margin-top:16px">${r[0]} ${r[1]}</h2><p class="mu sm" style="text-align:center">Você observou, registrou, organizou e analisou: coletar dados com a Folha de Verificação mostrou onde estava o problema real. Fatos, não achismos.</p></div><button class="btn big" onclick="intro()">↺ Reiniciar investigação</button>`;
+let n=0;const el=document.getElementById('fs'),st=Math.max(1,Math.round(S.score/50)),iv=setInterval(()=>{n=Math.min(S.score,n+st);el.textContent=n.toLocaleString('pt-BR');if(n>=S.score)clearInterval(iv)},30)}
+intro();
+</script></body></html>
